@@ -1,34 +1,28 @@
+// quartz.config.ts
+
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
 
-/**
- * Quartz 4 Configuration
- *
- * See https://quartz.jzhao.xyz/configuration for more information.
- */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "Quartz 4",
-    pageTitleSuffix: "",
+    pageTitle: "Jardim Digital CPNU",
     enableSPA: true,
     enablePopovers: true,
-    analytics: {
-      provider: "plausible",
-    },
-    locale: "en-US",
-    baseUrl: "quartz.jzhao.xyz",
+    analytics: null,
+    locale: "pt-BR",
+    baseUrl: "lufreitas0000.github.io/cpnu_garden_quartz", // Verifique se o nome do repo está correto
     ignorePatterns: ["private", "templates", ".obsidian"],
-    defaultDateType: "modified",
+    defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        header: "Schibsted Grotesk",
-        body: "Source Sans Pro",
-        code: "IBM Plex Mono",
+        header: "Noto Sans",
+        body: "Source Sans 3",
+        code: "Fira Code",
       },
       colors: {
-        lightMode: {
+        lightMode: { // Você pode configurar um tema claro aqui se quiser
           light: "#faf8f8",
           lightgray: "#e5e5e5",
           gray: "#b8b8b8",
@@ -37,18 +31,16 @@ const config: QuartzConfig = {
           secondary: "#284b63",
           tertiary: "#84a59d",
           highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#fff23688",
         },
-        darkMode: {
-          light: "#161618",
-          lightgray: "#393639",
-          gray: "#646464",
-          darkgray: "#d4d4d4",
-          dark: "#ebebec",
-          secondary: "#7b97aa",
-          tertiary: "#84a59d",
+        darkMode: { // Tema escuro que definimos
+          light: "oklch(0.3244 0.0229 264.18)",
+          lightgray: "oklch(0.35 0.03 250)",
+          gray: "oklch(0.7 0.02 250)",
+          darkgray: "oklch(0.98 0.01 250)",
+          dark: "oklch(1 0 0)",
+          secondary: "oklch(0.85 0.25 90)",
+          tertiary: "oklch(0.6 0.2 264)",
           highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#b3aa0288",
         },
       },
     },
@@ -57,8 +49,9 @@ const config: QuartzConfig = {
     transformers: [
       Plugin.FrontMatter(),
       Plugin.CreatedModifiedDate({
-        priority: ["frontmatter", "git", "filesystem"],
+        priority: ["frontmatter", "filesystem"],
       }),
+      Plugin.Latex({ renderEngine: "katex" }),
       Plugin.SyntaxHighlighting({
         theme: {
           light: "github-light",
@@ -66,12 +59,11 @@ const config: QuartzConfig = {
         },
         keepBackground: false,
       }),
-      Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
+      Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: true }),
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.TableOfContents(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
       Plugin.Description(),
-      Plugin.Latex({ renderEngine: "katex" }),
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
@@ -80,16 +72,14 @@ const config: QuartzConfig = {
       Plugin.ContentPage(),
       Plugin.FolderPage(),
       Plugin.TagPage(),
+      // A CORREÇÃO ESTÁ AQUI: Este plugin agora está presente e configurado
       Plugin.ContentIndex({
         enableSiteMap: true,
         enableRSS: true,
       }),
       Plugin.Assets(),
       Plugin.Static(),
-      Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      // Comment out CustomOgImages to speed up build time
-      Plugin.CustomOgImages(),
     ],
   },
 }

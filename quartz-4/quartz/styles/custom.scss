@@ -1,3 +1,105 @@
-@use "./base.scss";
+// Importa as fontes do Google definidas em quartz.config.ts
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Fira+Code:wght@400;500;700&display=swap");
 
-// put your custom CSS here!
+// Define as variáveis de cor para o tema escuro
+[theme="dark"] {
+    --light: oklch(0.3244 0.0229 264.18);
+    --lightgray: oklch(0.35 0.03 250);
+    --gray: oklch(0.7 0.02 250);
+    --darkgray: oklch(0.98 0.01 250);
+    --dark: oklch(1 0 0);
+    --secondary: oklch(0.85 0.25 90);
+    --tertiary: oklch(0.6 0.2 264);
+    --highlight: rgba(143, 159, 169, 0.15);
+}
+
+// Estilos para as Tags
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    & > .tag {
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        background-color: var(--lightgray);
+        color: var(--gray);
+        font-family: var(--codeFont);
+        font-size: 0.8rem;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        text-decoration: none;
+
+        &:hover {
+            background-color: var(--secondary);
+            color: var(--light);
+        }
+        
+        // Estilo para tags de status
+        &[data-tag="seed"] {
+            border: 1px dashed oklch(0.7 0.1 90);
+            color: oklch(0.7 0.1 90);
+        }
+        &[data-tag="budding"] {
+            border: 1px solid oklch(0.85 0.25 90);
+            color: oklch(0.85 0.25 90);
+        }
+        &[data-tag="evergreen"] {
+            background-color: oklch(0.6 0.2 150);
+            color: var(--light);
+            border: 1px solid oklch(0.6 0.2 150);
+        }
+    }
+}
+
+// Estilos para a página de questões
+.question-container {
+    padding: 1.5rem;
+    background-color: var(--lightgray);
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    margin: 2rem 0;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 1rem 0;
+    }
+
+    li {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--gray);
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+
+        &:hover {
+            background-color: oklch(from var(--lightgray) calc(l + 0.05) c h);
+        }
+
+        &.selected {
+            border-color: var(--secondary);
+            background-color: oklch(from var(--secondary) l c h / 0.1);
+        }
+
+        &.correct {
+            border-color: oklch(0.6 0.2 150);
+            background-color: oklch(0.6 0.2 150 / 0.1);
+            color: oklch(0.9 0.1 150);
+        }
+
+        &.incorrect {
+            border-color: oklch(0.6 0.2 25);
+            background-color: oklch(0.6 0.2 25 / 0.1);
+            color: oklch(0.9 0.1 25);
+        }
+    }
+
+    .explanation {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-top: 1px solid var(--gray);
+        color: var(--darkgray);
+    }
+}

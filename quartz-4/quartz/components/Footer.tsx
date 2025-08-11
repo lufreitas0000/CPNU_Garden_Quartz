@@ -13,6 +13,7 @@ export default ((opts?: Options) => {
     const links = opts?.links ?? []
     return (
       <footer class={`${displayClass ?? ""}`}>
+        <hr />
         <p>
           {i18n(cfg.locale).components.footer.createdWith}{" "}
           <a href="https://quartz.jzhao.xyz/">Quartz v{version}</a> © {year}
@@ -24,6 +25,8 @@ export default ((opts?: Options) => {
             </li>
           ))}
         </ul>
+        {/* ADICIONE A LINHA ABAIXO PARA CARREGAR O SCRIPT DAS QUESTÕES */}
+        <script src="/assets/js/question-logic.js" defer></script>
       </footer>
     )
   }
