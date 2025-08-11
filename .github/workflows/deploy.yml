@@ -1,0 +1,61 @@
+name: Publicar Jardim Digital
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Baixa o código do site para a raiz do ambiente
+      - name: Checkout do código do site
+        uses: actions/checkout@v4
+
+      # Baixa as notas do vault para uma pasta chamada 'content'
+      - name: Checkout do vault de conteúdo
+        uses: actions/checkout@v4
+        with:
+          repository: lufreitas0000/CPNU_Vault
+          token: ${{ secrets.VAULT_TOKEN }}
+          path: content
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Instalar dependências
+        run: pnpm install
+
+      - name: Construir o Jardim Digital
+        run: pnpm exec quartz build
+
+      - name: Upload do artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
