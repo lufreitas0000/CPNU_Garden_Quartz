@@ -1,62 +1,49 @@
-# VERSÃO FINAL COM DEPURAÇÃO DETALHADA
+# .github/workflows/deploy.yml
 
-name: Publicar Jardim Digital
-
+name: Deploy Quartz
 on:
-  workflow_dispatch:
   push:
     branches:
-      - main
+      - main # ou a branch que você usa como principal
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código do site
-        uses: actions/checkout@v4
-
-      - name: Checkout do vault de conteúdo
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: lufreitas0000/CPNU_Vault
-          token: ${{ secrets.VAULT_TOKEN }}
-          path: content
+          fetch-depth: 0 # Necessário para o plugin de histórico do git
 
-      # --- SEÇÃO DE DEPURAÇÃO ---
-      # Estes passos nos mostrarão informações cruciais sobre o ambiente
-      - name: "Debug: Mostrar diretório de trabalho atual"
-        run: pwd
-      
-      - name: "Debug: Listar todos os arquivos e pastas recursivamente"
-        run: ls -R
-
-      - name: "Debug: Mostrar o conteúdo do workflow que está sendo executado"
-        run: cat .github/workflows/deploy.yml
-      # --- FIM DA SEÇÃO DE DEPURAÇÃO ---
-
-      - name: Setup pnpm
+      - name: Set up pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # Lê a versão do seu arquivo .node-version
+          node-version-file: ".node-version"
+          # Configura o cache para pnpm, para builds mais rápidos
           cache: "pnpm"
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: pnpm install
 
-      - name: Construir o Jardim Digital
-        run: pnpm exec quartz build
+      - name: Build Quartz
+        run: pnpm run build
 
-      - name: Upload do artefato
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
@@ -68,6 +55,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy para GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
