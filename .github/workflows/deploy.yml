@@ -1,3 +1,5 @@
+# VERSÃO FINAL COM DEPURAÇÃO
+
 name: Publicar Jardim Digital
 
 on:
@@ -15,11 +17,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Baixa o código do site para a raiz do ambiente
+      # 1. Baixa o código do site para a raiz do ambiente
       - name: Checkout do código do site
         uses: actions/checkout@v4
 
-      # Baixa as notas do vault para uma pasta chamada 'content'
+      # 2. Baixa as notas do vault para uma pasta chamada 'content'
       - name: Checkout do vault de conteúdo
         uses: actions/checkout@v4
         with:
@@ -27,23 +29,32 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           path: content
 
+      # 3. PASSO DE DEPURAÇÃO: Mostra a estrutura de arquivos criada
+      - name: "Debug: Listar arquivos e pastas"
+        run: ls -R
+
+      # 4. Configura o pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
 
+      # 5. Configura o Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: "pnpm" # O cache-dependency-path não é necessário se o pnpm-lock.yaml estiver na raiz
 
+      # 6. Instala as dependências
       - name: Instalar dependências
         run: pnpm install
 
+      # 7. Constrói o site
       - name: Construir o Jardim Digital
         run: pnpm exec quartz build
 
+      # 8. Faz upload do resultado
       - name: Upload do artefato
         uses: actions/upload-pages-artifact@v3
         with:
