@@ -17,17 +17,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1. Baixa o código do seu site (CPNU_Garden_Quartz) para a raiz
+      # CORREÇÃO 1: Baixa o código do site para a raiz (sem 'path')
       - name: Checkout do código do site
         uses: actions/checkout@v4
 
-      # 2. Baixa as notas do seu vault privado para uma pasta chamada 'content'
+      # CORREÇÃO 2: Baixa as notas do vault para uma pasta chamada 'content'
       - name: Checkout do vault de conteúdo
         uses: actions/checkout@v4
         with:
-          repository: lufreitas0000/CPNU_Vault # IMPORTANTE: Verifique se este é o nome correto
+          repository: lufreitas0000/CPNU_Vault
           token: ${{ secrets.VAULT_TOKEN }}
-          path: content # A mágica está aqui: o vault vai para a pasta 'content'
+          path: content
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -40,6 +40,7 @@ jobs:
           node-version: 20
           cache: "pnpm"
 
+      # CORREÇÃO 3: Comando simplificado, pois já estamos na pasta raiz
       - name: Instalar dependências
         run: pnpm install
 
