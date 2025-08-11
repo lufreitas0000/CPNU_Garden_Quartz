@@ -30,7 +30,7 @@ jobs:
           path: content # A mágica está aqui: o vault vai para a pasta 'content'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
           version: 8
 
